@@ -8,13 +8,13 @@ public class JSONPlaceholderExercise {
      * @return String - The JSON response from the API
      */
     public static String getPostById(Integer postId) {
-        // TODO: Student Implementation
-        // 1. Create a new HTTP request
-        // 2. Set the endpoint URL using BASE_URL + '/posts/' + postId
-        // 3. Set the HTTP method to 'GET'
-        // 4. Send the request and get the response
-        // 5. Return the response body as string
-        return null;
+        HttpResponse res = sendCallout(BASE_URL + '/posts/' + postId, 'GET', '');
+
+        if (res.getStatusCode() >= 200 && res.getStatusCode() <= 299) {
+            return res.getBody();
+        } else {
+            return 'An error occurred Response Code: ' + res.getStatusCode() + ' Response Status: ' + res.getStatus();
+        }
     }
     
     /**
@@ -26,15 +26,15 @@ public class JSONPlaceholderExercise {
      * @return String - The JSON response from the API
      */
     public static String createPost(String title, String body, Integer userId) {
-        // TODO: Student Implementation
-        // 1. Create a new HTTP request
-        // 2. Set the endpoint URL using BASE_URL + '/posts'
-        // 3. Set the HTTP method to 'POST'
-        // 4. Create a JSON string with the post data
-        // 5. Set the request body
-        // 6. Send the request and get the response
-        // 7. Return the response body as string
-        return null;
+        Post newPost = new Post(title, body, userId);
+
+        HttpResponse res = sendCallout(BASE_URL + '/posts', 'POST', JSON.serialize(newPost));
+
+        if (res.getStatusCode() >= 200 && res.getStatusCode() <= 299) {
+            return res.getBody();
+        } else {
+            return 'An error occurred Response Code: ' + res.getStatusCode() + ' Response Status: ' + res.getStatus();
+        }
     }
     
     /**
@@ -47,15 +47,15 @@ public class JSONPlaceholderExercise {
      * @return String - The JSON response from the API
      */
     public static String updatePost(Integer postId, String title, String body, Integer userId) {
-        // TODO: Student Implementation
-        // 1. Create a new HTTP request
-        // 2. Set the endpoint URL using BASE_URL + '/posts/' + postId
-        // 3. Set the HTTP method to 'PUT'
-        // 4. Create a JSON string with the updated post data
-        // 5. Set the request body
-        // 6. Send the request and get the response
-        // 7. Return the response body as string
-        return null;
+        Post updatedPost = new Post(postId, title, body, userId);
+
+        HttpResponse res = sendCallout(BASE_URL + '/posts/' + postId, 'PUT', JSON.serialize(updatedPost));
+
+        if (res.getStatusCode() >= 200 && res.getStatusCode() <= 299) {
+            return res.getBody();
+        } else {
+            return 'An error occurred Response Code: ' + res.getStatusCode() + ' Response Status: ' + res.getStatus();
+        }
     }
     
     /**
@@ -66,15 +66,17 @@ public class JSONPlaceholderExercise {
      * @return String - The JSON response from the API
      */
     public static String patchPostTitle(Integer postId, String title) {
-        // TODO: Student Implementation
-        // 1. Create a new HTTP request
-        // 2. Set the endpoint URL using BASE_URL + '/posts/' + postId
-        // 3. Set the HTTP method to 'PATCH'
-        // 4. Create a JSON string with only the title
-        // 5. Set the request body
-        // 6. Send the request and get the response
-        // 7. Return the response body as string
-        return null;
+        Post updatedPost = new Post();
+        updatedPost.postId = postId;
+        updatedPost.title = title;
+
+        HttpResponse res = sendCallout(BASE_URL + '/posts/' + postId, 'PATCH', JSON.serialize(updatedPost));
+
+        if (res.getStatusCode() >= 200 && res.getStatusCode() <= 299) {
+            return res.getBody();
+        } else {
+            return 'An error occurred Response Code: ' + res.getStatusCode() + ' Response Status: ' + res.getStatus();
+        }
     }
     
     /**
@@ -84,12 +86,45 @@ public class JSONPlaceholderExercise {
      * @return Integer - The HTTP status code from the response
      */
     public static Integer deletePost(Integer postId) {
-        // TODO: Student Implementation
-        // 1. Create a new HTTP request
-        // 2. Set the endpoint URL using BASE_URL + '/posts/' + postId
-        // 3. Set the HTTP method to 'DELETE'
-        // 4. Send the request and get the response
-        // 5. Return the response status code
-        return null;
+        HttpResponse res = sendCallout(BASE_URL + '/posts/' + postId, 'DELETE', '');
+        return res.getStatusCode();
+    }
+
+    // Implemented this helper method to apply the principle of DRY (Don't Repeat Yourself)
+    // I'm also lazy and don't want to write extra lines of code :)
+    public static HttpResponse sendCallout(String endpoint, String method, String body) {
+        Http http = new Http();
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint(endpoint);
+        req.setMethod(method);
+        req.setBody(body);
+
+        return http.send(req);
+    }
+
+    // Wrapper Class
+    public class Post {
+        public Integer postId;
+        public String title;
+        public String body;
+        public Integer userId;
+
+        // Used to create an empty Post object
+        public Post() {}
+
+        // Used to create a Post
+        public Post(String title, String body, Integer userId) {
+            this.title = title;
+            this.body = body;
+            this.userId = userId;
+        }
+
+        // Used to update an existing Post
+        public Post(Integer postId, String title, String body, Integer userId) {
+            this.postId = postId;
+            this.title = title;
+            this.body = body;
+            this.userId = userId;
+        }
     }
 } 
