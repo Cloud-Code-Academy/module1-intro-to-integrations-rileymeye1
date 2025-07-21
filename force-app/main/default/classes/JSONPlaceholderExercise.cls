@@ -8,13 +8,18 @@ public class JSONPlaceholderExercise {
      * @return String - The JSON response from the API
      */
     public static String getPostById(Integer postId) {
-        // TODO: Student Implementation
-        // 1. Create a new HTTP request
-        // 2. Set the endpoint URL using BASE_URL + '/posts/' + postId
-        // 3. Set the HTTP method to 'GET'
-        // 4. Send the request and get the response
-        // 5. Return the response body as string
-        return null;
+        Http http = new Http();
+        HttpRequest req = new HttpRequest();
+        req.setEndpoint(BASE_URL + '/posts/' + postId);
+        req.setMethod('GET');
+
+        HttpResponse res = http.send(req);
+
+        if (res.getStatusCode() >= 200 && res.getStatusCode() <= 299) {
+            return res.getBody();
+        } else {
+            return 'An error occurred Response Code: ' + res.getStatusCode() + ' Response Status: ' + res.getStatus();
+        }
     }
     
     /**
