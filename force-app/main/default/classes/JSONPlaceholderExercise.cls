@@ -99,8 +99,7 @@ public class JSONPlaceholderExercise {
         req.setMethod(method);
         req.setBody(body);
 
-        HttpResponse res = http.send(req);
-        return res;
+        return http.send(req);
     }
 
     // Wrapper Class
